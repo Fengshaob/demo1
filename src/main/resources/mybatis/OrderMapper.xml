@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.demo.model.OrderModel">
+        <id column="order_id" property="orderId" />
+        <result column="user_id" property="userId" />
+    </resultMap>
+
+    <sql id="baseColumns">
+        order_id,
+        user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.example.demo.model.OrderModel">
+        INSERT INTO t_order(user_id) VALUES ( #{userId});
+    </insert>
+    <select id="findOrder" resultMap="BaseResultMap">
+        select * from t_order where user_id = #{userId}
+    </select>
+    <select id="findOrderById" resultMap="BaseResultMap">
+        select * from t_order where order_id = #{orderId}
+    </select>
+
+</mapper>

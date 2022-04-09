@@ -1,0 +1,49 @@
+server:
+  port: 8080
+spring:
+  main:
+    allow-circular-references: true
+  redis:
+    password:
+    cluster:
+      nodes: 39.104.60.157:7001,39.104.60.157:7002,39.104.60.157:7003
+      max-redirects: 3
+    lettuce:
+      pool:
+        max-idle: 16
+        max-active: 32
+        min-idle: 8
+  application:
+    name: fsb
+  shardingsphere:
+    datasource:
+      names: ds0
+      ds0:
+        url: jdbc:mysql://39.104.60.157:3306/starfx?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        username: root
+        password: 123456
+    sharding:
+      tables:
+        t_order:
+          actual-data-nodes: ds0.t_order$->{0..1}
+          table-strategy:
+            inline:
+              sharding-column: order_id
+              algorithm-expression: t_order$->{order_id % 2}
+          key-generator:
+            column: order_id
+            type: SNOWFLAKE
+            props:
+              worker:
+                id: 123
+    props:
+      sql:
+        show: true
+  profiles:
+    active: dev
+
+mybatis-plus:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.example.demo.model
